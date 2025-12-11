@@ -36,6 +36,43 @@ API для авторизации пользователей и выполнен
 
 Authorization: Bearer <JWT_TOKEN>
 
+## Register User
+
+URL: POST /api/users/register
+
+Описание: Регистрация пользователя для тестирования. После успешной регистрации пользователь получает стартовый баланс 8.00 USD.
+Логин должен быть уникальным — второй раз зарегистрировать того же пользователя нельзя.
+
+Тело (JSON):
+
+{
+  "userName": "newUser",
+  "password": "password123"
+}
+
+
+Успешный ответ (200):
+
+{
+  "message": "User registered successfully"
+}
+
+
+Ошибки:
+
+400 — логин уже существует
+
+{
+  "error": "User with this login already exists"
+}
+
+
+400 — логин или пароль пустые
+
+{
+  "error": "Login and password are required"
+}
+
 ## Login
 
 URL: POST /auth/login

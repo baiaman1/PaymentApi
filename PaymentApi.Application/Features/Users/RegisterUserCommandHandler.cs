@@ -23,7 +23,7 @@ namespace PaymentApi.Application.Features.Users
             var exists = await _db.Users
                 .AnyAsync(x => x.Login == request.UserName, cancellationToken);
 
-            HttpException.ThrowIf(exists, HttpStatusCode.BadRequest, "Пользователь с таким логином уже существует");
+            HttpException.ThrowIf(exists, HttpStatusCode.BadRequest, "User with this login already exists.");
             
             string passwordHash = PasswordHasher.Hash(request.Password);
 
@@ -37,7 +37,7 @@ namespace PaymentApi.Application.Features.Users
             await _db.Users.AddAsync(user, cancellationToken);
             await _db.SaveChangesAsync(cancellationToken);
 
-            return "Пользователь успешно зарегистрирован";
+            return "User successfully registered.";
         }
     }
 }

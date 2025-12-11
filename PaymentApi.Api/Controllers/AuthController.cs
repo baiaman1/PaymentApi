@@ -28,7 +28,6 @@ namespace PaymentApi.Api.Controllers
         [Authorize]
         public async Task<IActionResult> Logout()
         {
-            // достаём токен из Authorization header, игнорируем регистр Bearer
             var authHeader = Request.Headers["Authorization"].ToString();
             if (string.IsNullOrWhiteSpace(authHeader) ||
                 !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
@@ -38,7 +37,6 @@ namespace PaymentApi.Api.Controllers
 
             var token = authHeader.Substring("Bearer ".Length).Trim();
 
-            // передаём токен в команду
             var ok = await _mediator.Send(new LogoutCommand { Token = token });
 
             return ok ? Ok() : Unauthorized();

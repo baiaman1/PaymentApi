@@ -18,7 +18,6 @@ namespace PaymentApi.Infrastructure.DependencyInjection
             services.AddScoped<IPaymentRepository, PaymentRepository>();
 
             // Services
-            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IJwtTokenService, JwtTokenService>();
             services.AddScoped<IAppDbContext>(sp =>
                 sp.GetRequiredService<AppDbContext>());

@@ -26,17 +26,14 @@ namespace PaymentApi.Application.Features.Payments
             MakePaymentCommand request,
             CancellationToken cancellationToken)
         {
-            // проверяем, что сессия по токену валидна
             var session = await _sessions.GetValidByTokenAsync(request.Token);
             if (session == null)
                 throw new UnauthorizedAccessException("Session invalid or token revoked.");
 
-            // получаем пользователя из сессии
             var user = await _users.GetByIdAsync(session.UserId);
             if (user == null)
                 throw new UnauthorizedAccessException();
 
-            // проверка достаточности средств
             if (user.Balance < Charge)
             {
                 return new MakePaymentResult
@@ -46,7 +43,6 @@ namespace PaymentApi.Application.Features.Payments
                 };
             }
 
-            // атомарная транзакция списания
             var newBalance = await _payments.MakePaymentAtomicAsync(user.Id, Charge);
 
             return new MakePaymentResult

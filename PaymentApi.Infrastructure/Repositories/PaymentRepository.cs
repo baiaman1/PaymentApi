@@ -33,7 +33,7 @@ namespace PaymentApi.Infrastructure.Repositories
             if (user.Balance < amount)
             {
                 await trx.RollbackAsync();
-                return user.Balance; // не списываем
+                return user.Balance;
             }
 
             user.Balance -= amount;

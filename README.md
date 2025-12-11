@@ -15,8 +15,8 @@ API для авторизации пользователей и выполнен
 
 1. Склонируйте репозиторорию и перейдите в папку проекта:
 
-- `git clone <your-repo-url>
-cd <your-repo-folder>`
+- `git clone git@github.com:baiaman1/PaymentApi.git
+cd PaymentApi`
 
 
 2. Соберите и запустите сервисы через Docker Compose:

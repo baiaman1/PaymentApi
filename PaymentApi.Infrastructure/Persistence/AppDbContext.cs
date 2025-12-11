@@ -25,7 +25,7 @@ namespace PaymentApi.Infrastructure.Persistence
                 b.HasIndex(u => u.Login).IsUnique();
                 b.Property(u => u.Login).HasMaxLength(200).IsRequired();
                 b.Property(u => u.PasswordHash).HasMaxLength(200).IsRequired();
-                b.Property(u => u.Balance).HasColumnType("decimal(18,2)").HasDefaultValue(0.00m);
+                b.Property(u => u.Balance).HasColumnType("decimal(18,2)").HasDefaultValue(8.00m);
                 b.Property(u => u.CreatedAt).HasDefaultValueSql("now()");
             });
 

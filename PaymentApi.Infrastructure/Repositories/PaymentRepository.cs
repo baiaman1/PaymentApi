@@ -20,24 +20,24 @@ namespace PaymentApi.Infrastructure.Repositories
         {
             await using var trx = await _db.Database.BeginTransactionAsync();
 
-            var lockedUser = await _db.Users
+            var user = await _db.Users
                 .FromSqlInterpolated($"SELECT * FROM \"Users\" WHERE \"Id\" = {userId} FOR UPDATE")
                 .FirstOrDefaultAsync();
 
-            if (lockedUser == null)
+            if (user == null)
             {
                 await trx.RollbackAsync();
                 throw new Exception("User not found");
             }
 
-            if (lockedUser.Balance < amount)
+            if (user.Balance < amount)
             {
                 await trx.RollbackAsync();
-                return lockedUser.Balance;
+                return user.Balance; // не списываем
             }
 
-            lockedUser.Balance -= amount;
-            _db.Users.Update(lockedUser);
+            user.Balance -= amount;
+            _db.Users.Update(user);
 
             var payment = new PaymentHistory
             {
@@ -51,7 +51,8 @@ namespace PaymentApi.Infrastructure.Repositories
             await _db.SaveChangesAsync();
             await trx.CommitAsync();
 
-            return lockedUser.Balance;
+            return user.Balance;
         }
+
     }
 }

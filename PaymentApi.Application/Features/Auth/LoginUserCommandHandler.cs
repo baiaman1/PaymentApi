@@ -13,26 +13,29 @@ namespace PaymentApi.Application.Features.Auth
     {
         private readonly IUserRepository _users;
         private readonly ISessionRepository _sessions;
-        private readonly ITokenService _tokenService;
+        private readonly IJwtTokenService _jwt;
 
         private const int MaxAttempts = 3;
         private static readonly TimeSpan LockDuration = TimeSpan.FromMinutes(5);
 
-        public LoginCommandHandler(IUserRepository users, ISessionRepository sessions, ITokenService tokenService)
+        public LoginCommandHandler(
+            IUserRepository users,
+            ISessionRepository sessions,
+            IJwtTokenService jwt)
         {
             _users = users;
             _sessions = sessions;
-            _tokenService = tokenService;
+            _jwt = jwt;
         }
 
         public async Task<LoginResult> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await _users.GetByLoginAsync(request.Login);
 
-            HttpException.ThrowIf(user == null, HttpStatusCode.Unauthorized, "Invalid login or password", "LoginError");
+            HttpException.ThrowIf(user == null, HttpStatusCode.Unauthorized, "Invalid login or password");
 
-            HttpException.ThrowIf(user.LockedUntil.HasValue && user.LockedUntil.Value > DateTime.UtcNow, 
-                                  HttpStatusCode.Unauthorized, $"Account locked until {user.LockedUntil.Value:u}", "LoginError");
+            if (user.LockedUntil.HasValue && user.LockedUntil.Value > DateTime.UtcNow)
+                HttpException.Throw(HttpStatusCode.Unauthorized, $"Account locked until {user.LockedUntil:u}");
 
             var passwordOk = PasswordHasher.Hash(request.Password) == user.PasswordHash;
             if (!passwordOk)
@@ -49,7 +52,7 @@ namespace PaymentApi.Application.Features.Auth
             user.LockedUntil = null;
             await _users.UpdateAsync(user);
 
-            var token = _tokenService.GenerateToken();
+            var token = _jwt.GenerateToken(user.Id);
 
             await _sessions.AddAsync(new Session
             {
@@ -60,6 +63,6 @@ namespace PaymentApi.Application.Features.Auth
 
             return new LoginResult { Token = token };
         }
-
     }
+
 }

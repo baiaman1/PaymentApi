@@ -9,6 +9,8 @@ namespace PaymentApi.Application.Features.Payments
 
     public class MakePaymentResult
     {
+        public bool Success { get; set; }
         public decimal NewBalance { get; set; }
     }
+
 }

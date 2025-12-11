@@ -97,7 +97,7 @@ namespace PaymentApi.Infrastructure.Migrations
                     b.Property<decimal>("Balance")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0.00m);
+                        .HasDefaultValue(8.00m);
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PaymentApi.Application.Features.Payments;
+using System.Security.Claims;
 
 namespace PaymentApi.Api.Controllers
 {
@@ -20,14 +21,21 @@ namespace PaymentApi.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Pay()
         {
-            var header = Request.Headers["Authorization"].ToString();
-            if (string.IsNullOrWhiteSpace(header)) return Unauthorized();
+            var authHeader = Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrWhiteSpace(authHeader) ||
+                !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+            {
+                return Unauthorized();
+            }
 
-            var token = header.Replace("Bearer ", "").Trim();
-            var cmd = new MakePaymentCommand { Token = token };
-            var res = await _mediator.Send(cmd);
-            if (res == null) return BadRequest(new { error = "Insufficient balance" });
-            return Ok(res);
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+
+            var result = await _mediator.Send(new MakePaymentCommand { Token = token });
+
+            if (!result.Success)
+                return BadRequest(new { error = "Insufficient balance", balance = result.NewBalance });
+
+            return Ok(new { balance = result.NewBalance });
         }
     }
 }

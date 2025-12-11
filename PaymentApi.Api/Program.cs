@@ -46,6 +46,7 @@ app.UseRouting();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseAuthentication();
+app.UseMiddleware<JwtSessionValidationMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

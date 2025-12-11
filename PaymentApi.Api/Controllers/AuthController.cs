@@ -28,14 +28,20 @@ namespace PaymentApi.Api.Controllers
         [Authorize]
         public async Task<IActionResult> Logout()
         {
-            var header = Request.Headers["Authorization"].ToString();
-            if (string.IsNullOrWhiteSpace(header)) return Unauthorized();
+            // достаём токен из Authorization header, игнорируем регистр Bearer
+            var authHeader = Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrWhiteSpace(authHeader) ||
+                !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+            {
+                return Unauthorized();
+            }
 
-            var token = header.Replace("Bearer ", "").Trim();
-            var cmd = new LogoutCommand { Token = token };
-            var ok = await _mediator.Send(cmd);
-            if (!ok) return Unauthorized();
-            return Ok();
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+
+            // передаём токен в команду
+            var ok = await _mediator.Send(new LogoutCommand { Token = token });
+
+            return ok ? Ok() : Unauthorized();
         }
     }
 }

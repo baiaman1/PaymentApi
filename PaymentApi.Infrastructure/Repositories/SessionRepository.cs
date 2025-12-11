@@ -16,16 +16,24 @@ namespace PaymentApi.Infrastructure.Repositories
             await _db.SaveChangesAsync();
         }
 
+        public async Task<bool> IsValidAsync(string token)
+        {
+            var session = await _db.Sessions.FirstOrDefaultAsync(x => x.Token == token);
+            return session != null && !session.IsRevoked;
+        }
+
+        public async Task<bool> InvalidateAsync(string token)
+        {
+            var session = await _db.Sessions.FirstOrDefaultAsync(x => x.Token == token);
+            if (session == null) return false;
+
+            session.IsRevoked = true;
+            await _db.SaveChangesAsync();
+            return true;
+        }
         public async Task<Session?> GetValidByTokenAsync(string token)
         {
             return await _db.Sessions.FirstOrDefaultAsync(s => s.Token == token && !s.IsRevoked);
-        }
-
-        public async Task RevokeAsync(Session session)
-        {
-            session.IsRevoked = true;
-            _db.Sessions.Update(session);
-            await _db.SaveChangesAsync();
         }
     }
 }

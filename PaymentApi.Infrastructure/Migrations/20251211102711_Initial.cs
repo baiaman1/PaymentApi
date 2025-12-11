@@ -20,7 +20,7 @@ namespace PaymentApi.Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Login = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     PasswordHash = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Balance = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0.00m),
+                    Balance = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 8.00m),
                     FailedAttempts = table.Column<int>(type: "integer", nullable: false),
                     LockedUntil = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")

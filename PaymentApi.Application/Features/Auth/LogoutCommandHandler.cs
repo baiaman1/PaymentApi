@@ -14,10 +14,7 @@ namespace PaymentApi.Application.Features.Auth
 
         public async Task<bool> Handle(LogoutCommand request, CancellationToken cancellationToken)
         {
-            var s = await _sessions.GetValidByTokenAsync(request.Token);
-            if (s == null) return false;
-            await _sessions.RevokeAsync(s);
-            return true;
+            return await _sessions.InvalidateAsync(request.Token);
         }
     }
 }

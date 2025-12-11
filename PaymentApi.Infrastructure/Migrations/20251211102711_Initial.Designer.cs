@@ -12,7 +12,7 @@ using PaymentApi.Infrastructure.Persistence;
 namespace PaymentApi.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251211032554_Initial")]
+    [Migration("20251211102711_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -100,7 +100,7 @@ namespace PaymentApi.Infrastructure.Migrations
                     b.Property<decimal>("Balance")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(18,2)")
-                        .HasDefaultValue(0.00m);
+                        .HasDefaultValue(8.00m);
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()

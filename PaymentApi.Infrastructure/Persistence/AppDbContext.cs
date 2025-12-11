@@ -1,15 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PaymentApi.Domain.Entities;
+using PaymentApi.Application.Interfaces;
 
 namespace PaymentApi.Infrastructure.Persistence
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : DbContext, IAppDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<User> Users => Set<User>();
         public DbSet<Session> Sessions => Set<Session>();
         public DbSet<PaymentHistory> PaymentHistory => Set<PaymentHistory>();
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        => base.SaveChangesAsync(cancellationToken);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

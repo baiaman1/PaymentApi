@@ -1,8 +1,7 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using PaymentApi.Application.DTOs;
 using PaymentApi.Application.Features.Auth;
-using PaymentApi.Application.Interfaces;
 
 namespace PaymentApi.Api.Controllers
 {
@@ -10,7 +9,7 @@ namespace PaymentApi.Api.Controllers
     [Route("[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly ISender _mediator; // MediatR
+        private readonly ISender _mediator;
 
         public AuthController(ISender mediator)
         {
@@ -18,6 +17,7 @@ namespace PaymentApi.Api.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginCommand cmd)
         {
             var res = await _mediator.Send(cmd);
@@ -25,6 +25,7 @@ namespace PaymentApi.Api.Controllers
         }
 
         [HttpPost("logout")]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             var header = Request.Headers["Authorization"].ToString();

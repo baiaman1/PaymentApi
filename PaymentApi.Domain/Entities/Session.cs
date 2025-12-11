@@ -8,7 +8,7 @@ namespace PaymentApi.Domain.Entities
         public int UserId { get; set; }
 
         [Required, MaxLength(500)]
-        public string Token { get; set; } = null!; // сгенерированный токен (можно хранить хеш)
+        public string Token { get; set; } = null!;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsRevoked { get; set; } = false;

@@ -11,7 +11,7 @@ namespace PaymentApi.Domain.Entities
         public string Login { get; set; } = null!;
 
         [Required, MaxLength(200)]
-        public string PasswordHash { get; set; } = null!; // BCrypt
+        public string PasswordHash { get; set; } = null!;
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Balance { get; set; } = 0.00m;
@@ -20,7 +20,6 @@ namespace PaymentApi.Domain.Entities
         public DateTime? LockedUntil { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        // навигации
         public ICollection<Session>? Sessions { get; set; }
         public ICollection<PaymentHistory>? Payments { get; set; }
     }

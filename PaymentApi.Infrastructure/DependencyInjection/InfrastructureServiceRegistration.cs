@@ -2,6 +2,7 @@
 using PaymentApi.Application.Interfaces;
 using PaymentApi.Application.Interfaces.Repositories;
 using PaymentApi.Application.Interfaces.Services;
+using PaymentApi.Infrastructure.Persistence;
 using PaymentApi.Infrastructure.Repositories;
 using PaymentApi.Infrastructure.Services;
 
@@ -18,6 +19,8 @@ namespace PaymentApi.Infrastructure.DependencyInjection
 
             // Services
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAppDbContext>(sp =>
+                sp.GetRequiredService<AppDbContext>());
 
             return services;
         }

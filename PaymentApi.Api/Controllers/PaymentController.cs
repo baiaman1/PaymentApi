@@ -1,12 +1,13 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PaymentApi.Application.Features.Payments;
-using PaymentApi.Application.Interfaces;
 
 namespace PaymentApi.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class PaymentController : ControllerBase
     {
         private readonly ISender _mediator;

@@ -204,3 +204,5 @@ curl -X POST "http://localhost:5000/payment" \
 
 curl -X POST "http://localhost:5000/auth/logout" \
   -H "Authorization: Bearer <JWT_TOKEN>"
+
+  # commit1
